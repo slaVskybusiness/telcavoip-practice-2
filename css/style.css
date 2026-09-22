@@ -1,0 +1,135 @@
+/* Kolory firmowe TelcaVoIP (z logo) */
+:root {
+  --navy: #0a1a4a;
+  --navy-light: #1b2f66;
+  --green: #8cc63f;
+  --green-dark: #6fa22c;
+  --bg: #f4f6fb;
+  --panel: #ffffff;
+  --border: #dfe3ec;
+  --text: #1c2333;
+  --muted: #6b7280;
+  --danger: #d64545;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a { color: var(--navy); text-decoration: none; }
+h1, h2, h3 { color: var(--navy); margin: 0 0 15px; }
+button { cursor: pointer; font-family: inherit; }
+
+/* Przyciski */
+.btn {
+  background: var(--green);
+  color: var(--navy);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn:hover { background: var(--green-dark); color: #fff; }
+.btn-secondary { background: var(--navy); color: #fff; }
+.btn-secondary:hover { background: var(--navy-light); }
+.btn-small { padding: 6px 12px; font-size: 13px; }
+.btn-danger { background: var(--danger); color: #fff; }
+
+/* Pola formularzy */
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: inherit;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--green); }
+label { display: block; margin-bottom: 5px; font-size: 14px; color: var(--muted); }
+
+/* Panele */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+/* Tabele */
+table { width: 100%; border-collapse: collapse; background: var(--panel); }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+th { background: var(--navy); color: #fff; }
+tr:hover td { background: #f7f9fd; }
+
+/* Znaczniki statusu */
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+.badge-active { background: #e4f3d3; color: var(--green-dark); }
+.badge-expired { background: #fbe0e0; color: var(--danger); }
+.badge-open { background: #fff3cd; color: #8a6d00; }
+.badge-closed { background: #e5e7eb; color: #4b5563; }
+
+.error-msg { background: #fbe0e0; color: var(--danger); padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; }
+.ok-msg { background: #e4f3d3; color: var(--green-dark); padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; }
+
+/* Logowanie */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  padding: 20px;
+}
+.login-box { width: 370px; max-width: 100%; }
+.login-logo { text-align: center; font-size: 30px; font-weight: bold; color: var(--navy); margin-bottom: 5px; }
+.login-logo span { color: var(--green-dark); }
+.login-box h2 { text-align: center; font-size: 18px; font-weight: normal; color: var(--muted); margin-bottom: 25px; }
+.login-hint { text-align: center; margin-top: 18px; font-size: 14px; color: var(--muted); }
+.login-hint a { color: var(--green-dark); font-weight: bold; }
+
+/* Uklad panelu (sidebar + tresc) */
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 230px; background: var(--navy); color: #fff; flex-shrink: 0; }
+.sidebar-logo { font-size: 24px; font-weight: bold; padding: 22px 20px; border-bottom: 1px solid var(--navy-light); }
+.sidebar-logo span { color: var(--green); }
+.sidebar nav { display: flex; flex-direction: column; padding: 15px 0; }
+.sidebar nav a { color: #cdd5e6; padding: 12px 20px; font-size: 15px; border-left: 4px solid transparent; }
+.sidebar nav a:hover { background: var(--navy-light); color: #fff; }
+.sidebar nav a.active { background: var(--navy-light); color: #fff; border-left-color: var(--green); font-weight: bold; }
+
+.main { flex: 1; display: flex; flex-direction: column; }
+.topbar { background: var(--panel); border-bottom: 1px solid var(--border); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
+.topbar-title { font-weight: bold; color: var(--navy); }
+.topbar-user { display: flex; align-items: center; gap: 15px; font-size: 14px; }
+.topbar-user small { color: var(--muted); }
+.content { padding: 25px; flex: 1; }
+
+.page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.toolbar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+
+/* Kafelki na pulpicie */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 18px; margin-bottom: 25px; }
+.tile { text-align: center; border-top: 4px solid var(--navy); }
+.tile-value { font-size: 40px; font-weight: bold; color: var(--navy); }
+.tile-label { color: var(--muted); margin-top: 5px; font-size: 14px; }
+
+/* Proste okno modalne na formularz */
+.modal-bg { position: fixed; inset: 0; background: rgba(10,26,74,0.5); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+.modal-bg.show { display: flex; }
+.modal { background: #fff; border-radius: 10px; padding: 25px; width: 450px; max-width: 100%; max-height: 90vh; overflow-y: auto; }
+.form-row { margin-bottom: 12px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+@media (max-width: 700px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; }
+  .sidebar nav { flex-direction: row; flex-wrap: wrap; }
+}

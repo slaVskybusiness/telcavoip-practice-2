@@ -1,0 +1,12 @@
+# Wgrywane pliki (zalaczniki) - trzymamy folder, ale nie same pliki
+uploads/*
+!uploads/.gitkeep
+
+# System / IDE
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
+
+# Claude Code local config
+.claude/
