@@ -1,101 +1,62 @@
 # TelcaVoIP - Panel zarzadzania klientami i uslugami VoIP
 
-Projekt praktyk (staz) - wewnetrzna aplikacja webowa do zarzadzania klientami,
+Projekt praktyk - wewnetrzna aplikacja webowa do zarzadzania klientami,
 kontami VoIP, uslugami, odnowieniami i interwencjami technicznymi.
 
-## Stos technologiczny
+## Technologie
 
-| Warstwa | Technologia |
-|---------|-------------|
-| Frontend | React (Vite) |
-| Backend | FastAPI (Python) |
-| Baza danych | MongoDB |
-| API | REST + dokumentacja Swagger/OpenAPI |
-| Uruchomienie | Docker (docker-compose) |
+- **HTML / CSS / JavaScript** - frontend
+- **PHP** - backend (bez frameworkow)
+- **MySQL** - baza danych (obsluga przez phpMyAdmin)
 
-## Jak uruchomic
+## Jak uruchomic (OSPanel / XAMPP)
 
-### Wariant 1: Docker (zalecany)
-
-```
-docker compose up --build
-```
-
-- Frontend: http://localhost:5173
-- Backend (API): http://localhost:8000
-- Dokumentacja API (Swagger): http://localhost:8000/docs
-
-### Wariant 2: recznie (do developmentu)
-
-Backend (wymaga uruchomionego MongoDB na porcie 27017):
-
-```
-cd backend
-python -m venv venv
-venv\Scripts\activate        # Windows
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-Frontend:
-
-```
-cd frontend
-npm install
-npm run dev
-```
+1. Skopiuj projekt do folderu serwera (np. domena w OSPanel).
+2. Uruchom **phpMyAdmin** i zaimportuj plik **`database.sql`**
+   (utworzy baze `telcavoip` z tabelami i kontem admina).
+3. W razie potrzeby popraw dane logowania do bazy w pliku **`config.php`**
+   (domyslnie host `127.0.0.1`, uzytkownik `root`, haslo puste).
+4. Otworz strone w przegladarce, np. `http://localhost/telcavoip/login.php`.
 
 ## Konto startowe
-
-Przy pierwszym uruchomieniu tworzy sie konto administratora:
 
 - e-mail: `admin@telcavoip.eu`
 - haslo: `admin123`
 
-## Role i uprawnienia
+## Role i uprawnienia (RBAC)
 
-- **Administrator** - pelny dostep, zarzadza uzytkownikami, widzi dziennik audytu.
-- **Operator** - zarzadza klientami, kontami VoIP, uslugami i odnowieniami.
-- **Technik** - obsluguje interwencje techniczne (otwiera, zamyka, dodaje pliki).
+- **Administrator** - wszystko + zarzadzanie uzytkownikami i dziennik audytu.
+- **Operator** - klienci, konta VoIP, uslugi, odnowienia.
+- **Technik** - interwencje techniczne (otwiera, zamyka, dodaje pliki).
 
-Kazdy endpoint sprawdza role uzytkownika (deny by default - domyslnie odmawiamy).
+Kazda akcja sprawdza role (domyslnie odmawiamy - deny by default).
 
-## Model danych (kolekcje MongoDB)
+## Baza danych (tabele)
 
-- **users** - uzytkownicy (name, email, password_hash, role, active)
-- **customers** - klienci (name, vat, email, phone, address, active, created_at)
-- **voip_accounts** - konta VoIP (customer_id, number, status)
-- **services** - uslugi (customer_id, type, start_date, expiry_date)
-- **renewals** - historia odnowien uslug (service_id, new_expiry_date, registered_by)
-- **interventions** - interwencje (customer_id, type, status, opened_at, closed_at, notes)
-- **attachments** - zalaczniki (entity_ref, filename, mime_type, size)
-- **audit_logs** - dziennik zdarzen (actor_id, action, entity, entity_id, timestamp)
+`users`, `customers`, `voip_accounts`, `services`, `renewals`,
+`interventions`, `attachments`, `audit_logs`.
 
-## Wazne decyzje projektowe
+## Wazne decyzje
 
-- **Hasla** trzymamy tylko jako hash (bcrypt), nigdy jako zwykly tekst.
-- **Logowanie** oparte na tokenie JWT.
-- **Status uslugi** liczymy zawsze z daty waznosci - usluga po terminie nigdy
-  nie pokaze sie jako aktywna.
-- **Duplikaty klientow** (ten sam NIP / email / telefon) sa wykrywane i blokowane
-  przy dodawaniu i edycji.
-- **Konto VoIP** zawsze przypiete do istniejacego klienta; przepiecie na innego
-  klienta jest zapisywane w audycie.
-- **Dziennik audytu** jest tylko do dopisywania - nie ma metody edycji ani
-  usuwania wpisow, wiec operator i technik nie moga go zmienic.
-- **Zalaczniki** sa sprawdzane pod katem typu i rozmiaru (max 5 MB) - zle pliki
-  sa odrzucane.
+- Hasla trzymane jako hash (`password_hash`), nigdy jawnie.
+- Logowanie na sesjach PHP.
+- Zapytania przygotowane (PDO) - ochrona przed SQL injection.
+- Status uslugi liczony z daty waznosci - usluga po terminie nie jest aktywna.
+- Duplikaty klientow (NIP / email / telefon) blokowane przy dodawaniu i edycji.
+- Dziennik audytu tylko do dopisywania - brak edycji i usuwania w kodzie.
+- Zalaczniki sprawdzane pod katem typu (PDF/PNG/JPG) i rozmiaru (max 5 MB).
 
-## Co jest zrobione (obowiazkowe wymagania z ТЗ)
+## Wspolpraca (dla drugiej osoby)
 
-- [x] Logowanie i autoryzacja wg roli (RBAC)
+Baze przekazujemy jako plik `database.sql` (eksport z phpMyAdmin).
+Kazdy importuje go u siebie lokalnie przez phpMyAdmin i pracuje na swojej kopii.
+
+## Zrobione (obowiazkowe wymagania)
+
+- [x] Logowanie i role (RBAC)
 - [x] CRUD klientow, kont VoIP, uslug i interwencji
 - [x] Wykrywanie duplikatow klientow
-- [x] Ochrona przed blednym powiazaniem konta VoIP
-- [x] Poprawna obsluga wygasania i odnowien uslug
+- [x] Konto VoIP zawsze przypiete do istniejacego klienta
+- [x] Obsluga wygasania i odnowien uslug
 - [x] Dziennik audytu (niezmienialny)
-- [x] Walidacja zalacznikow, brak wrazliwych danych w logach
-- [x] Dokumentacja API (Swagger) i uruchomienie przez Docker
-
-Rozszerzenia opcjonalne (email, eksport CSV/PDF, masowy import) - poza zakresem
-tego etapu.
+- [x] Walidacja zalacznikow
